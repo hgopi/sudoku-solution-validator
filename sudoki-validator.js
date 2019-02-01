@@ -56,3 +56,41 @@ console.log(validSolution([[5, 3, 4, 6, 7, 8, 9, 1, 2],
                            [9, 6, 1, 5, 3, 7, 2, 8, 4],
                            [2, 8, 7, 4, 1, 9, 6, 3, 5],
                            [3, 4, 5, 2, 8, 6, 1, 7, 9]]));
+
+
+var isValidSudoku = function(board) {
+    const row = new Set();
+    const cols = new Map();
+    const subBoxes = new Map(); 
+    const n = 3;
+
+    for (let i = 0; i < board.length; i++) {
+        let  x_i = Math.floor(i/n);
+        if (!subBoxes.has(x_i)) subBoxes.set(x_i, new Map());
+        row.clear();
+        for (let j = 0; j < board[i].length; j++) {
+            let x_j = Math.floor(j/n);
+            if (!subBoxes.get(x_i).has(x_j)) subBoxes.get(x_i).set(x_j, new Set());
+            if (!cols.has(j)) {
+                cols.set(j, new Set());
+            }
+            if (row.has(board[i][j])) {
+                return false;
+            }
+            if (cols.get(j).has(board[i][j])) {
+                return false;
+            }
+            if (subBoxes.get(x_i).get(x_j).has(board[i][j])) {
+                return false;
+            }
+            if (board[i][j] !== '.') {
+                row.add(board[i][j]);
+                cols.set(j, cols.get(j).add(board[i][j]));
+                subBoxes.get(x_i).get(x_j).add(board[i][j]);
+            }
+        }
+    }
+    return true;    
+};
+
+
